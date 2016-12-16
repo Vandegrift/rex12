@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/Vandegrift/rex12.svg?style=svg)](https://circleci.com/gh/Vandegrift/rex12)
+[![CircleCI](https://circleci.com/gh/Vandegrift/rex12.svg?style=shield&circle-token=43575a1d75c0a4b93cfdde39ec725d1c47974036)](https://circleci.com/gh/Vandegrift/rex12)
 
 # REX12
 
