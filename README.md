@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/Vandegrift/rex12.svg?style=svg)](https://circleci.com/gh/Vandegrift/rex12)
+
 # REX12
 
 This gem helps read files or text in the ASNI X.12 format.
