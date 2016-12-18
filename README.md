@@ -23,7 +23,19 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Array form:
+
+```ruby
+require 'rex12'
+
+sgements = REX12::Document.read('myfilepath.edi')
+some_date = segments.find {|seg| seg.segment_type=='DTM' && seg.elements[1].value=='056'}
+if some_date
+  puts some_date.elements[2].value
+else
+  puts "This is not the date you're looking for"
+end
+```
 
 ## Development
 
