@@ -5,6 +5,7 @@ module REX12; class ParseError < StandardError
   # REX12::Element that was being parsed when error was generated (may be nil)
   attr_reader :element
   def initialize message, segment=nil, element=nil
+    super(message)
     @segment = segment
     @element = element
   end

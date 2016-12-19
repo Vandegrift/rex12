@@ -16,4 +16,7 @@ describe REX12::ParseError do
     expect(e.segment).to be_nil
     expect(e.element).to be_nil
   end
+  it "should return message" do
+    expect(described_class.new("my message").message).to eq "my message"
+  end
 end
