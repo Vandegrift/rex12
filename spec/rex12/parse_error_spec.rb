@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe REX12::ParseError do
   it "should extend StandardError" do
     expect(described_class.new("my message").is_a?(StandardError)).to be_truthy

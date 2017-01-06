@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe REX12::Element do
   describe '#value' do
     it "should return raw text" do

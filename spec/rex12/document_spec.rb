@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe REX12::Document do
   let :base_text do
     str = <<edi_text
