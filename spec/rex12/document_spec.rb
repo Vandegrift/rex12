@@ -78,5 +78,14 @@ edi_text
       # make sure it's parsing segments properly
       expect(segs[2].value).to eq 'ST*997*1136'
     end
+
+    context "with IO object" do
+      it "reads edi data from an IO object" do
+        File.open("spec/support/997.txt", "r") do |f|
+          segs = described_class.read('spec/support/997.txt')
+          expect(segs.length).to eq 10
+        end
+      end
+    end
   end
 end

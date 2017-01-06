@@ -4,17 +4,19 @@
 # but if you use the block form of the methods, then the subsequent ruby objects
 # are created within the block loops so they can be garbage collected
 module REX12; class Document
+
   # Parse the EDI document from file
   #
   # @return (see #parse)
-  def self.read path
+  def self.read path_or_io
     if block_given?
-      parse(IO.read(path)) {|s| yield s}
+      parse(file_text(path_or_io)) {|s| yield s}
       return nil
     else
-      return parse(IO.read(path))
+      return parse(file_text(path_or_io))
     end
   end
+
   # Parse the EDI document from text
   #
   # @return [Enumerator<REX12::Segment>,nil] all segments or nil for block form
@@ -50,15 +52,21 @@ module REX12; class Document
     # segment terminator with CRLF
     return text[105..107] if text[106..107]=="\r\n"
     return text[105..106] if ["\r","\n"].include?(text[106]) && text[107]=="G"
-    raise REX12::ParseError, "Cannot determine segment terminator, invalid ISA / GS."
+    raise REX12::ParseError, "Invalid ISA / GS segements. Could not determine segment terminator."
   end
   private_class_method :determine_segment_terminator
 
   def self.validate_isa text
     raise REX12::ParseError, "EDI file must be at least 191 characters to include a valid envelope." unless text.length > 191
     str = text[0..2]
-    raise REX12::ParseError, "First 3 characters must be ISA, they were #{str}" unless str=='ISA'
+    raise REX12::ParseError, "First 3 characters must be ISA. They were '#{str}'." unless str=='ISA'
     return
   end
   private_class_method :validate_isa
+
+  # Allow reading from an object that responds to #read or assume the given param is a string file path and read with IO
+  def self.file_text path_or_io
+    path_or_io.respond_to?(:read) ? path_or_io.read : IO.read(path_or_io)
+  end
+  private_class_method :file_text
 end; end
