@@ -17,15 +17,16 @@ module REX12; class Document
     end
   end
 
-  # Parse the EDI document from text
+  # Parse the EDI document from text or IO object
   #
-  # @return [Enumerator<REX12::Segment>,nil] all segments or nil for block form
+  # @return [Array<REX12::Segment>,nil] all segments or nil for block form
   def self.parse text
     validate_isa(text)
     element_separator = text[3]
     segment_terminator = determine_segment_terminator(text)
     sub_element_separator = text[104]
     r = []
+
     text.split(segment_terminator).each_with_index do |seg_text,pos|
       next if seg_text.length == 0
       seg = REX12::Segment.new(seg_text,element_separator,sub_element_separator,pos)
@@ -35,6 +36,7 @@ module REX12; class Document
         r << seg
       end
     end
+
     if block_given?
       return nil
     else
@@ -42,7 +44,52 @@ module REX12; class Document
     end
   end
 
+  # Parses the EDI document from text or IO object, returning or yielding every transaction from the 
+  # document.
+  #
+  # @return [Array<REX12::Transaction>,nil] all transactions or nil for block form
+  def self.each_transaction text
+    isa = nil
+    current_gs = nil
+    current_segments = []
+    transactions = []
+
+    parse(text) do |segment|
+      segment_type = segment.segment_type
+      case segment_type
+      when "ISA"
+        isa = segment
+      when "GS"
+        current_gs = segment
+      when "IEA", "GE"
+        # Do nothing, we don't care about the trailer segments
+      else
+        current_segments << segment
+
+        # If we found the transaction trailer, it means we can take all the current segments we have and process them
+        if segment_type == "SE"
+          transaction = REX12::Transaction.new(isa, current_gs, current_segments)
+
+          if block_given? 
+            yield transaction
+          else
+            transactions << transaction
+          end
+
+          current_gs = nil
+          current_segments = []
+        end
+      end
+    end
+
+    block_given? ? nil : transactions
+  end
+
   def self.determine_segment_terminator text
+    # Technically, allowing multi-character terminators is not valid EDI, but you 
+    # see it happen ALL the time with EDI that's been hand editted from a client (especially on Windows).
+    # It's a valid enough use-case that we're accounting for it.
+
     # no segement terminator, just CRLF
     return "\r\n" if text[105..106]=="\r\n"
     # no segement terminator, just CR or LF
