@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe REX12::Segment do
   let :base_text do
     'DTM*ACK*20000415*0830*ED>XYZ'
