@@ -76,7 +76,6 @@ module REX12; class Document
             transactions << transaction
           end
 
-          current_gs = nil
           current_segments = []
         end
       end
