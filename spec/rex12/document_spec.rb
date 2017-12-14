@@ -2,11 +2,11 @@ describe REX12::Document do
   subject { described_class }
 
   let(:isa) { "ISA*00*          *00*          *ZZ*RECEIVERID     *12*SENDERID       *100325*1113*U*00403*000011436*0*T*>~\n" }
+  let (:gs) { "GS*FA*RECEIVERID*SENDERID*20100325*1113*24712*X*004030~\n" }
   let(:iea) { "IEA*1*000011436~\n" }
 
   let(:base_edi) do
     str = <<edi_text
-GS*FA*RECEIVERID*SENDERID*20100325*1113*24712*X*004030~
 ST*997*1136~
 AK1*PO*142~
 AK2*850*01>42~
@@ -18,7 +18,7 @@ edi_text
         str
   end
 
-  let(:base_text) { isa + base_edi + iea }
+  let(:base_text) { isa + gs + base_edi + iea }
 
   describe '#parse' do
     it "should handle base text" do
@@ -104,7 +104,7 @@ edi_text
   end
 
   describe "each_transaction" do
-    let (:multiple_transactions) { isa + base_edi + base_edi + iea }
+    let (:multiple_transactions) { isa + gs + base_edi + base_edi + iea }
 
     def evaluate_transactions transactions
       expect(transactions.length).to eq 2
@@ -118,6 +118,11 @@ edi_text
       # Make sure the segments are in order and the ST/SE ones are captured
       expect(transaction.segments.first.value).to eq "ST*997*1136"
       expect(transaction.segments.last.value).to eq "SE*6*1136"
+
+      # Make sure we squashed a bug where the GS segment was getting cleared out every transaction
+      transaction = transactions.first
+      expect(transaction.gs_segment).not_to be_nil
+      expect(transaction.gs_segment.value).to eq "GS*FA*RECEIVERID*SENDERID*20100325*1113*24712*X*004030"
     end
 
     it "parses all transactions from EDI text using block" do
