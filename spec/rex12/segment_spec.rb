@@ -30,6 +30,16 @@ describe REX12::Segment do
     end
   end
 
+  describe "element" do
+    it "returns the element at the given index" do
+      expect(subject.element 1).to eq elements[1]
+    end
+
+    it "returns nil for invalid index" do
+      expect(subject.element 100).to be_nil
+    end
+  end
+
   describe "elements" do
     it "returns an enum of all elements" do
       els = subject.elements
@@ -45,13 +55,13 @@ describe REX12::Segment do
   end
 
   describe "[]" do 
-    it "returns element at index" do 
-      expect(subject[1]).to eq elements[1]
+    it "returns an elements value at index" do 
+      expect(subject[1]).to eq elements[1].value
     end
 
     it "returns nil for invalid index" do
       expect(subject[100]).to be_nil
     end
   end
-  
+
 end

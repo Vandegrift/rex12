@@ -24,12 +24,17 @@ module REX12; class ElementWithSubElements < REX12::Element
     return @sub_elements.to_enum { @sub_elements.length }
   end
 
+  def sub_element index
+    @sub_elements[index]
+  end
+
   def to_s
     @sub_elements.map(&:to_s).join(@sub_element_separator)
   end
 
   def [](index)
-    @sub_elements[index]
+    sub_el = sub_element(index)
+    sub_el.nil? ? nil : sub_el.value
   end
 
 end; end

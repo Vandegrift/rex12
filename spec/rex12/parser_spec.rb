@@ -58,9 +58,9 @@ describe REX12::Parser do
 
       it "handles sub-elements" do
         subelement_segment = edi.segments[2]
-        expect(subelement_segment[2]).to be_a REX12::ElementWithSubElements
+        expect(subelement_segment.element(2)).to be_a REX12::ElementWithSubElements
 
-        el = subelement_segment[2]
+        el = subelement_segment.element(2)
         expect(el.sub_elements?).to eq true
         expect(el.sub_elements.to_a.map(&:to_s)).to eq ["01", "42"]
       end

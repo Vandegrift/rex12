@@ -17,14 +17,18 @@ module REX12; class Segment
     end
   end
 
+  def element index
+    @segment_elements[index]
+  end
+
   # @return [String] text representation of first element (like: ISA or REF)
   def segment_type
-    el = @segment_elements[0]
-    el.nil? ? nil : el.value
+    self[0]
   end
 
   def [](index)
-    @segment_elements[index]
+    el = element(index)
+    el.nil? ? nil : el.value
   end
 
   def isa_segment?

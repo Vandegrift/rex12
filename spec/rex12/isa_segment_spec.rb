@@ -46,7 +46,7 @@ describe REX12::IsaSegment do
 
   describe "[]" do 
     it "returns element at index" do 
-      expect(subject[1]).to eq elements[1]
+      expect(subject[1]).to eq elements[1].value
     end
 
     it "returns nil for invalid index" do

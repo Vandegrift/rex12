@@ -47,5 +47,25 @@ describe REX12::ElementWithSubElements do
       expect { |b| subject.sub_elements(&b) }.to yield_successive_args(subelements[0], subelements[1], subelements[2]) 
     end
   end
+
+  describe "sub_element" do
+    it "returns the subelement at position" do
+      expect(subject.sub_element 0).to eq subelements[0]
+    end
+
+    it "returns nil for invalid indexes" do
+      expect(subject.sub_element 100).to be_nil
+    end
+  end
+
+  describe "[]" do
+    it "returns the subelement value at position" do
+      expect(subject[2]).to eq "c"
+    end
+
+    it 'returns nil for invalid indexes' do
+      expect(subject[100]).to be_nil
+    end
+  end
   
 end
