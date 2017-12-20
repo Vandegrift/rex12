@@ -1,36 +1,38 @@
 module REX12; class Segment
-  # @return [String] raw text of segment
-  attr_reader :value
-
   # @return [Integer] zero based position in file
   attr_reader :position
 
-  def initialize value, element_separator, sub_element_separator, position
-    @value = value
-    @position = position
-    make_elements(value,element_separator,sub_element_separator)
+  def initialize elements, position
+    @segment_elements = elements.freeze
+    @position = position.freeze
   end
 
   # @return [Array<REX12::Element>, nil] get all elements as array or yield to block
   def elements
     if block_given?
-      @elements.each {|el| yield el}
+      @segment_elements.each {|el| yield el}
       return nil
+    else
+      @segment_elements.to_enum { @segment_elements.length }
     end
-    # making a fresh array so nobody can screw with the internals of the class
-    @elements.clone
+  end
+
+  def element index
+    @segment_elements[index]
   end
 
   # @return [String] text representation of first element (like: ISA or REF)
   def segment_type
-    @elements.first.value
+    self[0]
   end
 
-  def make_elements value, element_separator, sub_element_separator
-    @elements = []
-    value.split(element_separator).each_with_index do |str,pos|
-      @elements << REX12::Element.new(str,sub_element_separator,pos)
-    end
+  def [](index)
+    el = element(index)
+    el.nil? ? nil : el.value
   end
-  private :make_elements
+
+  def isa_segment?
+    false
+  end
+
 end; end

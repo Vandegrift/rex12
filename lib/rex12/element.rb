@@ -9,25 +9,26 @@ module REX12; class Element
   # @param value [String] base text value of the element
   # @param sub_element_separator [String] character that should be used to split sub elements
   # @param position [Integer] zero based position of this element in its parent segment
-  def initialize value, sub_element_separator, position
-    @value = value
-    @sub_element_separator = sub_element_separator
-    @position = position
+  def initialize value, position
+    @value = value.freeze
+    @position = position.freeze
   end
 
   # @return [true, false] does the element have sub elements
   def sub_elements?
-    @value.index(@sub_element_separator) ? true : false
+    false
   end
 
-  # Get all sub elements as an array or yield them to a block
-  # @return [Array<String>, nil]
-  def sub_elements
-    r = @value.split(@sub_element_separator)
-    if block_given?
-      r.each {|se| yield se}
-      return nil
-    end
-    return r
+  def to_s
+    value
   end
+
+  protected
+    def value= v
+      @value = v
+    end
+
+    def position= pos
+      @position = pos
+    end
 end; end

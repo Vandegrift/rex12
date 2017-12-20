@@ -1,4 +1,4 @@
-describe REX12::Element do
+describe REX12::SubElement do
 
   subject { described_class.new "abc", 1 }
 
@@ -19,12 +19,6 @@ describe REX12::Element do
 
     it "freezes position" do
       expect(subject.position).to be_frozen
-    end
-  end
-
-  describe "sub_elements?" do
-    it "returns false" do
-      expect(subject.sub_elements?).to eq false
     end
   end
 
