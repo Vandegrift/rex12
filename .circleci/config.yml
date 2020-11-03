@@ -25,7 +25,7 @@ jobs:
         - ~/.bundle
     - run:
         name: Rspec Unit Tests
-        no_output_timeout: 20m
+        no_output_timeout: 5m
         command: bundle exec rspec --require spec_helper --format RspecJunitFormatter --out /tmp/circle-tests/rspec/rspec.xml --format progress spec
     - store_test_results:
         path: /tmp/circle-tests
